@@ -1,0 +1,5 @@
+ public Orders()
+        {
+            InitializeComponent();
+            DGrid.ItemsSource =PRACTIC2Entities.GetContext().Order.ToList();
+        }

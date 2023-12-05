@@ -1,0 +1,735 @@
+#########################################################
+	Product.cs AND Context.cs AND Manager
+#########################################################
+
+public string BackgroundColor
+        {
+            get 
+            {
+                if (ProductQuantityInStock == 0)
+                    return "LightGray";
+                return "White";
+            }
+        }
+
+#########################################################
+
+ public static KosmetikEntities _context;
+        public static KosmetikEntities GetContext()
+        {
+            if (_context == null)
+                _context = new KosmetikEntities();
+            return _context;
+        }
+
+#########################################################
+
+public static Frame AdminFrame { get; set; }
+
+#########################################################
+			MainWindow
+#########################################################
+
+ Title="Авторизация" Height="450" Width="450" MinHeight="450" MinWidth="450" MaxHeight="460" MaxWidth="460" Icon="/Resources/icon.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="359"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Background="#76e383" Panel.ZIndex="-2">
+            <Image Source="/Resources/logo.png" HorizontalAlignment="Left"/>
+            <Label FontSize="30" Foreground="#498c51" Content="Авторизация" HorizontalAlignment="Center" FontWeight="Bold"/>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Label FontSize="30" Foreground="#498c51" Content="Логин" 
+                   HorizontalAlignment="Center" Margin="0,5,0,307"/>
+            
+            <Label FontSize="30" Foreground="#498c51" Content="Пароль" 
+                   HorizontalAlignment="Center" Margin="0,100,0,211" />
+            
+            <TextBox x:Name="logtxt" ToolTip="Поле Логина" Width="162" FontSize="28" 
+                     HorizontalAlignment="Center" Margin="10,52,0,273"/>
+            
+            <PasswordBox x:Name="pass" ToolTip="Поле Пароля" Width="162" FontSize="28" 
+                         HorizontalAlignment="Center" Margin="10,148,0,179"/>
+            
+            <Button x:Name="Btn_Click" Margin="10,202,0,112" FontSize="30" Content="Вход" 
+                    Click="Btn_Click1" HorizontalAlignment="Center" Width="112"/>
+            
+            <Button x:Name="Btn_Click2" Margin="10,260,0,69" FontSize="15" Content="Войти как гость" 
+                    Click="Btn_Click_Guest" HorizontalAlignment="Center" Height="30" Width="125"/>
+        </Grid>
+    </Grid>
+
+#########################################################
+
+ private List<User> userObj;
+        public string UserFIO;
+        public MainWindow()
+        {
+            InitializeComponent();
+            userObj = KosmetikEntities.GetContext().User.ToList();
+        }
+        public void Btn_Click1(object sender, RoutedEventArgs e)
+        {
+            var currentUsers = userObj.Where(user => user.UserLogin == logtxt.Text && user.UserPassword == pass.Password).FirstOrDefault();
+            if (currentUsers != null)
+            {
+                UserFIO = currentUsers.UserSurname + " " + currentUsers.UserName + " " + currentUsers.UserPatronymic + " ";
+                HomeAdmin a = new HomeAdmin(UserFIO);
+                HomeManagerClientGuest mcg = new HomeManagerClientGuest(UserFIO);
+                if (currentUsers.UserRole == 1)
+                {
+                    a.Show();
+                    a.FrmMain.Navigate(new AdminProduct());
+                }
+                else
+                {
+                    mcg.Show();
+                    mcg.FrmMain2.Navigate(new Products());
+                }
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Введите правильный логин и пароль",
+                    "Внимание!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Btn_Click_Guest(object sender, RoutedEventArgs e)
+        {
+            UserFIO = "Гость ";
+            HomeManagerClientGuest mcg = new HomeManagerClientGuest(UserFIO);
+            mcg.Show();
+            mcg.FrmMain2.Navigate(new Products());
+            this.Close();
+        }
+    }
+
+#########################################################
+			HomeAdmin
+#########################################################
+
+Title="ООО «Косметика»" Height="545" Width="1200"  MinHeight="545" MinWidth="1200"  MaxHeight="555" MaxWidth="1210" Icon="/Resources/icon.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="350"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="#76e383" Panel.ZIndex="-2">
+            <Image Source="/Resources/logo.png" HorizontalAlignment="Left"/>
+
+            <Label VerticalAlignment="Center" FontSize="30" Foreground="#498c51" 
+               Content="ООО «Косметика»" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Добро пожаловать, "/>
+                
+                <TextBlock x:Name="FIOText"/>
+                
+                <Button x:Name="LogOut"  Height="25" Content="Выйти"          
+                    Click="LogOut_Click" HorizontalAlignment="Right" Width="50" VerticalAlignment="Top"/>
+            </StackPanel>
+        </Grid>
+        <Frame x:Name="FrmMain" Grid.Row="1" NavigationUIVisibility="Hidden" Margin="0,0,0,-79"/>
+    </Grid>
+
+#########################################################
+
+public HomeAdmin(string fio)
+        {
+            InitializeComponent();
+            FIOText.Text = fio;
+            Manager.AdminFrame = FrmMain;
+        }
+
+        private void LogOut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow autho = new MainWindow();
+            autho.Show();
+            this.Close();
+        }
+
+#########################################################
+			AdminProduct
+#########################################################
+
+Title="Продукция">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <WrapPanel Orientation="Horizontal" ItemHeight="30">
+            <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center" />
+            
+            <TextBox Width="200" VerticalAlignment="Center" x:Name="SearchFilterTextBox" KeyUp="SearchFilterTextBox_KeyUp"/>
+            
+            <Label Content="Сортировка: " Margin="10,0,0,0" VerticalAlignment="Center"/>
+
+            <ComboBox Name="SortTypeComboBox" SelectedIndex="0" VerticalAlignment="Center" MinWidth="200" 
+                      SelectionChanged="SortTypeComboBox_SelectionChanged" ItemsSource="{Binding SortList}"/>
+
+            <Label Content="Фильтрация: " VerticalAlignment="Center"/>
+
+            <ComboBox Width="150" x:Name="ProductTypeFilter" VerticalAlignment="Center" SelectionChanged="ProductTypeFilter_SelectionChanged"
+                DisplayMemberPath="ManufacturerName" SelectedIndex="0" ItemsSource="{Binding FilterList}"/>
+        </WrapPanel>
+
+        <Button x:Name="Btn_Cls" Click="BtnAdd1" Grid.Row="1" Content="Добавить продукцию" 
+                HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+        <ListView Grid.Row="2" Grid.Column="1" x:Name="ProductListView" 
+                  ItemsSource="{Binding ProductList}">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1" Background="{Binding BackgroundColor}" BorderBrush="Black">
+                        <Grid Margin="10" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="{Binding Path=ProductPhoto}" Width="64" Height="64"/>
+
+                            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ProductName}" FontWeight="Bold"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ProductDescription}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Производитель: " />
+                                    <TextBlock Text="{Binding Manufacturer.ManufacturerName}"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Цена: "/>
+                                    <TextBlock Text="{Binding ProductCost}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <TextBlock Text="На складе:" Grid.Column="2" VerticalAlignment="Top"    
+                                       HorizontalAlignment="Right" Margin="10"/>
+                            
+                            <TextBlock Text="{Binding ProductQuantityInStock}" Grid.Column="2" VerticalAlignment="Center"
+                                       HorizontalAlignment="Right" Margin="10"/>
+                            
+                            <TextBlock Text="{Binding ProductUnit}" Grid.Column="2" VerticalAlignment="Bottom" 
+                                            HorizontalAlignment="Right" Margin="10"/>
+                            
+                            <StackPanel Grid.Column="3">
+                                <Button Content="Редактировать" Name="BtnEdit" Click="BtnEditS"/>
+                                <Button x:Name="Btn_Clv" Click="BtnDelete1" Content="Удалить"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+#########################################################
+
+, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Invalidate()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ProductList"));
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs("ProductList"));
+        }
+
+        private int SortType = 0;
+        private int FilterType = 0;
+        public List<Manufacturer> FilterList { get; set; }
+        public string[] SortList { get; set; } = 
+            {
+                "Без сортировки",
+                "Стоимость по возростанию",
+                "Стоимость по убыванию"
+            };
+        private string SearchFilter = "";
+        private IEnumerable<Product> _ProductList;
+        public IEnumerable<Product> ProductList
+        {
+            get
+            {
+                var Result = _ProductList;
+
+                switch (SortType)
+                {
+                    case 0:
+                        Result = KosmetikEntities.GetContext().Product.ToList();
+                        break;
+                    case 1:
+                        Result = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
+                        break;
+                    case 2:
+                        Result = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
+                        break;
+                }
+                if (SearchFilter != "")
+                    Result = Result.Where(
+                        p => p.ProductName.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductDescription.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductStatus.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductUnit.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductSupplier.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (FilterType > 0)
+                    Result = Result.Where(i => i.ProductManufacturer == FilterType);
+
+                return Result.Take(1000);
+            }
+            set
+            {
+                _ProductList = value;
+                Invalidate();
+            }
+        }
+
+        public AdminProduct()
+        {
+            InitializeComponent();
+            DataContext = this;
+            _ProductList = KosmetikEntities.GetContext().Product.ToList();
+            FilterList = KosmetikEntities.GetContext().Manufacturer.ToList();
+            FilterList.Insert(0, new Manufacturer { ManufacturerName = "Все производители" });
+        }
+
+
+        private void ProductTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterType = ProductTypeFilter.SelectedIndex;
+            Invalidate();
+        }
+
+        private void SortTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SortType = SortTypeComboBox.SelectedIndex;
+            Invalidate();
+        }
+
+        private void SearchFilterTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            SearchFilter = SearchFilterTextBox.Text;
+            Invalidate();
+        }
+
+        private void BtnAdd1(object sender, RoutedEventArgs e)
+        {
+            AddProduct addproduct = new AddProduct(null);
+            addproduct.ShowDialog();
+        }
+
+        private void BtnEditS(object sender, RoutedEventArgs e)
+        {
+            AddProduct addproduct = new AddProduct((sender as Button).DataContext as Product);
+            addproduct.ShowDialog();
+        }
+
+        private void BtnDelete1(object sender, RoutedEventArgs e)
+        {
+            var productForRenoving = ProductListView.SelectedItems.Cast<Product>().ToList();
+            if (MessageBox.Show($"Вы точно хотите удалить следующие {productForRenoving.Count()} элементы?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    KosmetikEntities.GetContext().Product.RemoveRange(productForRenoving);
+                    KosmetikEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Данные удалены");
+                    Manager.AdminFrame.Navigate(new AdminProduct());
+                }
+                catch
+                {
+                    MessageBox.Show("Произошла ошибка, возможно продукт присутствует в заказе");
+                }
+            }
+        }
+    }
+
+#########################################################
+			AddProduct
+#########################################################
+
+Title="Добавление продукции" Width="500" Height="520" MinWidth="500" MinHeight="520" MaxWidth="510" MaxHeight="530" Icon="/Resources/icon.ico">
+
+    <Grid x:Name="DGrid1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="600*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Label Content="ID:"/>
+            <Label Content="{Binding ProductID}"/>
+        </StackPanel>
+
+        <TextBlock Text="Артикль" HorizontalAlignment="Center" FontSize="13" Grid.Row="1"/>
+        <TextBox Height="25" Width="150" Grid.Column="1"  HorizontalAlignment="Left" Grid.Row="1" Text="{Binding ProductArticleNumber}"/>
+
+        <TextBlock Text="Наименование"  HorizontalAlignment="Center" FontSize="13" Grid.Row="2"/>
+        <TextBox Height="25" Width="150" Grid.Column="1"  HorizontalAlignment="Left" Grid.Row="2" Text="{Binding ProductName}"/>
+
+        <TextBlock Text="Категория" HorizontalAlignment="Center" FontSize="13" Grid.Row="3"/>
+        <ComboBox Height="25" Width="150" Grid.Column="1" x:Name="ComboType1" HorizontalAlignment="Left" Grid.Row="3" 
+                  DisplayMemberPath="CategoryName"  Text="{Binding Category.CategoryName}" SelectedItem="{Binding Category}"/>
+
+        <TextBlock Text="Единица измерения" HorizontalAlignment="Center" FontSize="13" Grid.Row="4"/>
+        <TextBox Height="25" Width="150" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="4" Text="{Binding ProductUnit}"/>
+
+        <TextBlock Text="Скидка" HorizontalAlignment="Center" FontSize="13" Grid.Row="12"/>
+        <TextBox Height="25" Width="150" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="12" Text="{Binding ProductDiscountAmount}"/>
+
+        <TextBlock Text="Статус" HorizontalAlignment="Center" FontSize="13" Grid.Row="14"/>
+        <TextBox Height="25" Width="150" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="14" Text="{Binding ProductStatus}"/>
+        
+        <TextBlock Text="Производитель" HorizontalAlignment="Center" FontSize="13" Grid.Row="5"/>
+        <ComboBox Height="25" Width="150" Grid.Column="1" x:Name="ComboType2" HorizontalAlignment="Left" Grid.Row="5" 
+                  DisplayMemberPath="ManufacturerName"  Text="{Binding Manufacturer.ManufacturerName}" SelectedItem="{Binding Manufacturer}"/>
+
+        <TextBlock Text="Поставщик" HorizontalAlignment="Center" FontSize="13" Grid.Row="6"/>
+        <TextBox Height="25" Width="150" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" Text="{Binding ProductSupplier}"/>
+
+        <TextBlock Text="Цена" HorizontalAlignment="Center" FontSize="13" Grid.Row="7"/>
+        <TextBox Height="25" Width="150" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="7" Text="{Binding ProductCost}"/>
+
+        <TextBlock Text="Изображение" Margin="0,44,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="8"/>
+        <Border BorderThickness="1" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" BorderBrush="Black" Width="100" Height="100" Margin="25,0">
+            <Image Width="100" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" Source="{Binding ProductPhoto}"/>
+        </Border>
+        <Button x:Name="BtnS" Click="BtnSClick" Grid.Row="8" Height="25" Width="150" HorizontalAlignment="Center" Content="Изменить изображение"/>
+
+        <TextBlock Text="Кол-во на складе" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="13" Grid.Row="9"/>
+        <TextBox  Width="150" Height="25" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="9" Text="{Binding ProductQuantityInStock}"/>
+
+        <TextBlock Text="Подробное описание" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="13" Grid.Row="10"/>
+        <TextBox  Width="150" TextWrapping="Wrap" Height="50" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="10" Text="{Binding ProductDescription}"/>
+
+        <Button x:Name="BtnSave" Click="BtnSaveClick" Grid.Row="15" Grid.Column="1" Width="150" Content="Сохранить" HorizontalAlignment="Left"/>
+    </Grid>
+</Window>
+
+#########################################################
+
+, INotifyPropertyChanged
+    {
+        private Product _currentproduct = new Product();
+        public event PropertyChangedEventHandler PropertyChanged;
+        public AddProduct(Product selectedProduct)
+        {
+            InitializeComponent();
+            DataContext = this;
+            ComboType1.ItemsSource = KosmetikEntities.GetContext().Category.ToList();
+            ComboType2.ItemsSource = KosmetikEntities.GetContext().Manufacturer.ToList();
+            if (selectedProduct != null)
+                _currentproduct = selectedProduct;
+
+            DataContext = _currentproduct;
+        }
+
+
+        private void BtnSClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog GetImageDialog = new OpenFileDialog();
+            GetImageDialog.Filter = "Файлы изображений: (*.png, *.jpg, *.jpeg)|*.png; *.jpg; *.jpeg";
+            GetImageDialog.InitialDirectory = Environment.GetEnvironmentVariable("/Resources");
+            if (GetImageDialog.ShowDialog() == true)
+            {
+                _currentproduct.ProductPhoto = GetImageDialog.FileName.Substring(Environment.CurrentDirectory.Length - 10);
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("_currentproduct"));
+                }
+
+            }
+        }
+
+        private void BtnSaveClick(object sender, RoutedEventArgs e)
+        {
+            StringBuilder errors = new StringBuilder();
+            if (string.IsNullOrWhiteSpace(_currentproduct.ProductName))
+                errors.AppendLine("Укажите наименование продукта");
+            if (string.IsNullOrWhiteSpace(_currentproduct.ProductDescription))
+                errors.AppendLine("Укажите описание продукта");
+            if (string.IsNullOrWhiteSpace(_currentproduct.ProductArticleNumber))
+                errors.AppendLine("Укажите артикль продукта");
+            if (_currentproduct.ProductCost < 0)
+                errors.AppendLine("Цена продукта не может быть отрицательной");
+            if (_currentproduct.ProductQuantityInStock < 0)
+                errors.AppendLine("Количество продукта не может быть отрицательным");
+            if (string.IsNullOrWhiteSpace(_currentproduct.ProductSupplier))
+                errors.AppendLine("Укажите поставщика продукта");
+            if (string.IsNullOrWhiteSpace(_currentproduct.ProductUnit))
+                errors.AppendLine("Укажите ед. измерения продукта");
+
+            if (errors.Length > 0)
+            {
+                MessageBox.Show(errors.ToString());
+                return;
+            }
+
+            if (_currentproduct.ProductID == 0)
+                KosmetikEntities.GetContext().Product.Add(_currentproduct);
+            try
+            {
+                KosmetikEntities.GetContext().SaveChanges();
+                MessageBox.Show("Информация сохранена");
+                Manager.AdminFrame.Navigate(new AdminProduct());
+                this.Close();
+            }
+            catch 
+            {
+                MessageBox.Show("Произошла ошибка, повторите попытку позже");
+            }
+        }
+
+
+#########################################################
+		HomeManagerClientGuest
+#########################################################
+
+Title="Добро пожаловать" Height="545" Width="1200" MinHeight="545" MinWidth="1200" MaxHeight="555" MaxWidth="1210" Icon="/Resources/icon.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="350"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="#76e383" Panel.ZIndex="-2">
+            <Image Source="/Resources/logo.png" HorizontalAlignment="Left"/>
+
+            <Label FontSize="30" Foreground="#498c51" Content="ООО «Косметика»" 
+               HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Добро пожаловать, "/>
+
+                <TextBlock x:Name="FIOText"/>
+
+                <Button x:Name="LogOut"  Height="25" Content="Выйти"          
+                    Click="LogOut_Click" HorizontalAlignment="Right" Width="50" VerticalAlignment="Top"/>
+            </StackPanel>
+        </Grid>
+        <Frame Name="FrmMain2" Grid.Row="2" NavigationUIVisibility="Hidden" Margin="0,0,0,-79"/>
+    </Grid>
+</Window>
+
+#########################################################
+
+ public HomeManagerClientGuest(string fio)
+        {
+            InitializeComponent();
+            FIOText.Text = fio;
+        }
+
+        private void LogOut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow autho = new MainWindow();
+            autho.Show();
+            this.Close();
+        }
+    }
+
+#########################################################
+			Products
+#########################################################
+
+Title="Продукты">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        
+        <WrapPanel Orientation="Horizontal" ItemHeight="30">
+            <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
+            
+            <TextBox Width="200" VerticalAlignment="Center" x:Name="SearchFilterTextBox" 
+                     KeyUp="SearchFilterTextBox_KeyUp"/>
+            
+            <Label Content="Сортировка: " Margin="10,0,0,0" VerticalAlignment="Center"/>
+            
+            <ComboBox Name="SortTypeComboBox" SelectedIndex="0" VerticalAlignment="Center" MinWidth="200" 
+                      SelectionChanged="SortTypeComboBox_SelectionChanged" ItemsSource="{Binding SortList}"/>
+
+            <Label Content="Фильтрация: " VerticalAlignment="Center"/>
+            <ComboBox Width="150" x:Name="ProductTypeFilter" VerticalAlignment="Center" SelectionChanged="ProductTypeFilter_SelectionChanged" 
+                      DisplayMemberPath="ManufacturerName" ItemsSource="{Binding FilterList}" SelectedIndex="0"/>
+        </WrapPanel>
+
+        <ListView Grid.Row="2" Grid.Column="1" x:Name="ProductListView" ItemsSource="{Binding ProductList}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1" Background="{Binding BackgroundColor}" BorderBrush="Black">
+                        <Grid Margin="10" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Image Name="Img" Source="{Binding Path=ProductPhoto}" Width="64" Height="64"/>
+                            
+                            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ProductName}" FontWeight="Bold"/>
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ProductDescription}"/>
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Производитель: "/>
+                                    <TextBlock Text="{Binding Manufacturer.ManufacturerName}"/>
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Цена: "/>
+                                    <TextBlock Text="{Binding ProductCost}"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <TextBlock Text="На складе:" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right"  Margin="10"/>
+                            
+                            <TextBlock Text="{Binding ProductQuantityInStock}" Grid.Column="2" VerticalAlignment="Center" 
+                                       HorizontalAlignment="Right"  Margin="10"/>
+                            
+                            <TextBlock Text="{Binding ProductUnit}" Grid.Column="2" VerticalAlignment="Bottom" 
+                                       HorizontalAlignment="Right" Margin="10"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>
+
+#########################################################
+
+, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Invalidate()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ProductList"));
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs("ProductList"));
+        }
+
+        private int SortType = 0;
+        private int FilterType = 0;
+        public List<Manufacturer> FilterList { get; set; }
+        public string[] SortList { get; set; } =
+            {
+                "Без сортировки",
+                "Стоимость по возростанию",
+                "Стоимость по убыванию",
+            };
+        private string SearchFilter = "";
+        private IEnumerable<Product> _ProductList;
+        public IEnumerable<Product> ProductList
+        {
+            get
+            {
+                var Result = _ProductList;
+
+                switch (SortType)
+                {
+                    case 0:
+                        Result = KosmetikEntities.GetContext().Product.ToList();
+                        break;
+                    case 1:
+                        Result = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
+                        break;
+                    case 2:
+                        Result = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
+                        break;
+                }
+
+                if (SearchFilter != "")
+                    Result = Result.Where(
+                        p => p.ProductName.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductDescription.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductStatus.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductUnit.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductSupplier.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (FilterType > 0)
+                    Result = Result.Where(i => i.ProductManufacturer == FilterType);
+
+                return Result.Take(1000);
+            }
+            set
+            {
+                _ProductList = value;
+                Invalidate();
+            }
+        }
+
+        public Products()
+        {
+            InitializeComponent();
+            DataContext = this;
+            _ProductList = KosmetikEntities.GetContext().Product.ToList();
+            FilterList = KosmetikEntities.GetContext().Manufacturer.ToList();
+            FilterList.Insert(0, new Manufacturer { ManufacturerName = "Все производители" });
+        }
+
+        private void ProductTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterType = ProductTypeFilter.SelectedIndex;
+            Invalidate();
+        }
+
+        private void SortTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SortType = SortTypeComboBox.SelectedIndex;
+            Invalidate();
+        }
+
+        private void SearchFilterTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            SearchFilter = SearchFilterTextBox.Text;
+            Invalidate();
+        }
+    }

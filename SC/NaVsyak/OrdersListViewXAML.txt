@@ -1,0 +1,45 @@
+Title="Заказы">
+    <Grid>
+        <ListView x:Name="Orderz" Margin="0,0,0,10">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1" BorderBrush="Black">
+                        <Grid Margin="10" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="1" Width="60" Height="60" BorderBrush="Black">
+                                <Image Source="{Binding Path = OrderPhoto}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Заказ номер " FontFamily="Arial"/>
+                                    <TextBlock Text="{Binding OrderID}" FontFamily="Arial"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding OrderStatus}" FontFamily="Arial"  Width="300"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Пункт выдачи: " FontFamily="Arial"/>
+                                    <TextBlock Text="{Binding OrderPickupPoint}" FontFamily="Arial"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding OrderDate}" FontFamily="Arial"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <TextBlock Text="Получено:" Grid.Column="2" VerticalAlignment="Top"    HorizontalAlignment="Right" FontFamily="Arial" Margin="10"/>
+                            <TextBlock Text="{Binding OrderPickupDate}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="Arial" Margin="10"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>

@@ -1,0 +1,13 @@
+ public HomeManagerClientGuest(string fio)
+        {
+            InitializeComponent();
+            FIOText.Text = fio;
+        }
+
+        private void LogOut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow autho = new MainWindow();
+            autho.Show();
+            this.Close();
+        }
+    }

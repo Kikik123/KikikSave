@@ -1,0 +1,67 @@
+create database Kosmetik
+go
+use Kosmetik
+go
+create table [Role]
+(
+	RoleID int primary key identity,
+	RoleName nvarchar(100) not null
+)
+go
+create table [User]
+(
+	UserID int primary key identity,
+	UserSurname nvarchar(100) not null,
+	UserName nvarchar(100) not null,
+	UserPatronymic nvarchar(100) not null,
+	UserLogin nvarchar(max) not null,
+	UserPassword nvarchar(max) not null,
+	UserRole int foreign key references [Role](RoleID) not null
+)
+go
+create table [Order]
+(
+	OrderID int primary key identity,
+	OrderStatus nvarchar(max) not null,
+	OrderDeliveryDate datetime not null,
+	OrderPickupPoint nvarchar(max) not null
+)
+go
+
+create table [Manufacturer]
+(
+	ManufacturerID int primary key identity,
+	ManufacturerName nvarchar(100) not null
+)
+
+go
+create table [Category]
+(
+	CategoryID int primary key identity,
+	CategoryName nvarchar(100) not null
+)
+
+go
+create table Product 
+(
+	ProductID int primary key identity,
+	ProductArticleNumber nvarchar(100) ,
+	ProductName nvarchar(30) not null,
+	ProductDescription nvarchar(60) not null,
+	ProductCategory int foreign key references [Category](CategoryID) not null,
+	ProductPhoto nvarchar(max) not null,
+	ProductManufacturer int foreign key references [Manufacturer](ManufacturerID) not null,
+	ProductCost decimal(19,2) not null,
+	ProductDiscountAmount tinyint null,
+	ProductQuantityInStock int not null,
+	ProductStatus nvarchar(max) not null,
+	ProductUnit nvarchar(30) not null,
+	ProductSupplier nvarchar(30) not null,
+)
+go
+create table OrderProduct
+(
+	OrderID int foreign key references [Order](OrderID) not null,
+	ProductID int foreign key references Product(ProductID) not null,
+	Primary key (OrderID,ProductID)
+)

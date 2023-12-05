@@ -1,0 +1,13 @@
+public HomeAdmin(string fio)
+        {
+            InitializeComponent();
+            FIOText.Text = fio;
+            Manager.AdminFrame = FrmMain;
+        }
+
+        private void LogOut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow autho = new MainWindow();
+            autho.Show();
+            this.Close();
+        }

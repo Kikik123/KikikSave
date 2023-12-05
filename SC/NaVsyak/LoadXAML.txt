@@ -1,0 +1,6 @@
+ <Grid x:Name="Image">
+        <Image Source="/materials/Большая пачка.png"></Image>
+        <Label x:Name="Заголовок" FontFamily="Verdana" FontSize="30" Foreground="#FFFFFF" Content="Большая пачка" HorizontalAlignment="Center" ></Label>
+        <StackPanel x:Name="Panel" Width="18" Height="19" Background="#FFFFFF" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="80,0,0,10" ></StackPanel>
+    </Grid>
+</Window>

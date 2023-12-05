@@ -1,0 +1,39 @@
+private int _CurrentPage = 0;
+        public int CurrentPage
+        {
+            get
+            {
+                return _CurrentPage;
+            }
+            set
+            {
+	if (value>0)
+	{
+	   if (value <= _ProductList.Count()/15)
+	   {
+                	_CurrentPage = value;
+                	Invalidate();
+	   }
+	}
+            }
+        }
+
+return Result.Skip(20 * CurrentPage).Take(20);
+
+private void PrevPage_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentPage--;
+        }
+
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentPage++;
+        }
+
+#########################################################
+
+<StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Content="«" Background="White" Name="PrevPage" Click="PrevPage_Click"/>
+            <TextBlock Text="{Binding CurrentPage}" VerticalAlignment="Center" Margin="5"/>
+            <Button Content="»" Background="White" Name="NextPage" Click="NextPage_Click"/>
+        </StackPanel>

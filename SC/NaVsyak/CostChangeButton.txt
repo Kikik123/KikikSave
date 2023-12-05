@@ -1,0 +1,25 @@
+<Button
+                x:Name="CostChangeButton"
+                Visibility="{Binding CostChangeButtonVisible}"
+                Click="CostChangeButton_Click"
+                Content="Изменить стоимость на..."
+                />
+
+#########################################################
+
+ public string CostChangeButtonVisible
+        {
+            get
+            {
+                if (ProductsSelectedCount > 1) return "Visible";
+                return "Collapsed";
+            }
+        }
+
+        public int ProductsSelectedCount = 0;
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ProductsSelectedCount = ProductListView.SelectedItems.Count;
+            Invalidate("CostChangeButtonVisible");
+        }

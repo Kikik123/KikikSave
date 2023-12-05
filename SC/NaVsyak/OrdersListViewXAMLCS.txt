@@ -1,0 +1,6 @@
+public Orders()
+        {
+            InitializeComponent();
+            DataContext = this;
+            Orderz.ItemsSource = PRAKTIK10Entities.GetContext().Order.ToList();
+        }

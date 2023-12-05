@@ -1,0 +1,19 @@
+public string BackgroundColor
+        {
+            get 
+            {
+                if (ProductQuantityInStock == 0)
+                    return "LightGray";
+                return "White";
+            }
+        }
+
+#########################################################
+
+ public static KosmetikEntities _context;
+        public static KosmetikEntities GetContext()
+        {
+            if (_context == null)
+                _context = new KosmetikEntities();
+            return _context;
+        }

@@ -1,0 +1,24 @@
+Title="Добро пожаловать, Администратор" Height="545" Width="1200"  MinHeight="545" MinWidth="1200"  MaxHeight="555" MaxWidth="1210" Icon="/Resources/icon.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="350"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="#76e383" Panel.ZIndex="-2">
+            <Image Source="/Resources/logo.png" HorizontalAlignment="Left"/>
+
+            <Label VerticalAlignment="Center" FontSize="30" Foreground="#498c51" 
+               Content="ООО «Косметика»" HorizontalAlignment="Center" FontWeight="Bold"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Добро пожаловать, "/>
+                
+                <TextBlock x:Name="FIOText"/>
+                
+                <Button x:Name="LogOut"  Height="25" Content="Выйти"          
+                    Click="LogOut_Click" HorizontalAlignment="Right" Width="50" VerticalAlignment="Top"/>
+            </StackPanel>
+        </Grid>
+        <Frame x:Name="FrmMain" Grid.Row="1" NavigationUIVisibility="Hidden" Margin="0,0,0,-79"/>
+    </Grid>

@@ -1,0 +1,19 @@
+DispatcherTimer dt = new DispatcherTimer();
+        public MainWindow()
+        {
+            InitializeComponent();
+            dt.Tick += new EventHandler(dt_Tick);
+            dt.Interval = new TimeSpan(0, 0, 0, 1);
+            dt.Start();
+        }
+        private void dt_Tick(object sender, EventArgs e)
+        {
+            Panel.Width += 40;
+            if (Panel.Width >= 260)
+            {
+                Login l = new Login();
+                l.Show();
+                dt.Stop();
+                this.Close();
+            }
+        }

@@ -1,0 +1,68 @@
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\KOSMETIK.exe.config
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\KOSMETIK.exe
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\KOSMETIK.pdb
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.dll
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.SqlServer.dll
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.xml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.SqlServer.xml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\bin\Debug\ru\EntityFramework.resources.dll
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.AssemblyReference.cache
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.SuggestedBindingRedirects.cache
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\MainWindow.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AddProduct.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AdminProduct.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeAdmin.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\Products.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\App.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK_Content.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK_MarkupCompile.cache
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK_MarkupCompile.lref
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\MainWindow.baml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AddProduct.baml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AdminProduct.baml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeAdmin.baml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\Products.baml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.g.resources
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.Properties.Resources.resources
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.GenerateResource.cache
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.CoreCompileInputs.cache
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.CopyComplete
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.exe
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.pdb
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeManagerClientGuest.g.cs
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\App.baml
+D:\Killедж\4 курс\УП\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeManagerClientGuest.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\KOSMETIK.exe.config
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\KOSMETIK.exe
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\KOSMETIK.pdb
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.dll
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.xml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\bin\Debug\ru\EntityFramework.resources.dll
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.AssemblyReference.cache
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.SuggestedBindingRedirects.cache
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\MainWindow.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AddProduct.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AdminProduct.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeAdmin.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeManagerClientGuest.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\Products.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\App.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK_Content.g.cs
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK_MarkupCompile.cache
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK_MarkupCompile.lref
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\App.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\MainWindow.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AddProduct.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\AdminProduct.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeAdmin.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\HomeManagerClientGuest.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\StrWindow\Products.baml
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.g.resources
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.Properties.Resources.resources
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.GenerateResource.cache
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.CoreCompileInputs.cache
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.csproj.CopyComplete
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.exe
+C:\Users\acer\Desktop\KOSMETIK\KOSMETIK\obj\Debug\KOSMETIK.pdb

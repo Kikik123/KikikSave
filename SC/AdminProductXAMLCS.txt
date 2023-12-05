@@ -1,0 +1,118 @@
+, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Invalidate()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ProductList"));
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs("ProductList"));
+        }
+
+        private int SortType = 0;
+        private int FilterType = 0;
+        public List<Manufacturer> FilterList { get; set; }
+        public string[] SortList { get; set; } = 
+            {
+                "Без сортировки",
+                "Стоимость по возростанию",
+                "Стоимость по убыванию"
+            };
+        private string SearchFilter = "";
+        private IEnumerable<Product> _ProductList;
+        public IEnumerable<Product> ProductList
+        {
+            get
+            {
+                var Result = _ProductList;
+
+                switch (SortType)
+                {
+                    case 0:
+                        Result = KosmetikEntities.GetContext().Product.ToList();
+                        break;
+                    case 1:
+                        Result = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
+                        break;
+                    case 2:
+                        Result = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
+                        break;
+                }
+                if (SearchFilter != "")
+                    Result = Result.Where(
+                        p => p.ProductName.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductDescription.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductStatus.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductUnit.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        p.ProductSupplier.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (FilterType > 0)
+                    Result = Result.Where(i => i.ProductManufacturer == FilterType);
+
+                return Result.Take(1000);
+            }
+            set
+            {
+                _ProductList = value;
+                Invalidate();
+            }
+        }
+
+        public AdminProduct()
+        {
+            InitializeComponent();
+            DataContext = this;
+            _ProductList = KosmetikEntities.GetContext().Product.ToList();
+            FilterList = KosmetikEntities.GetContext().Manufacturer.ToList();
+            FilterList.Insert(0, new Manufacturer { ManufacturerName = "Все производители" });
+        }
+
+
+        private void ProductTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterType = ProductTypeFilter.SelectedIndex;
+            Invalidate();
+        }
+
+        private void SortTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SortType = SortTypeComboBox.SelectedIndex;
+            Invalidate();
+        }
+
+        private void SearchFilterTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            SearchFilter = SearchFilterTextBox.Text;
+            Invalidate();
+        }
+
+        private void BtnAdd1(object sender, RoutedEventArgs e)
+        {
+            AddProduct addproduct = new AddProduct(null);
+            addproduct.ShowDialog();
+        }
+
+        private void BtnEditS(object sender, RoutedEventArgs e)
+        {
+            AddProduct addproduct = new AddProduct((sender as Button).DataContext as Product);
+            addproduct.ShowDialog();
+        }
+
+        private void BtnDelete1(object sender, RoutedEventArgs e)
+        {
+            var productForRenoving = ProductListView.SelectedItems.Cast<Product>().ToList();
+            if (MessageBox.Show($"Вы точно хотите удалить следующие {productForRenoving.Count()} элементы?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    KosmetikEntities.GetContext().Product.RemoveRange(productForRenoving);
+                    KosmetikEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Данные удалены");
+                    Manager.AdminFrame.Navigate(new AdminProduct());
+                }
+                catch
+                {
+                    MessageBox.Show("Произошла ошибка, возможно продукт присутствует в заказе");
+                }
+            }
+        }
+    }
