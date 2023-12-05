@@ -1,4 +1,5 @@
-﻿using KOSMETIK.Model;
+﻿using KOSMETIK.Classes;
+using KOSMETIK.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,16 +48,16 @@ namespace KOSMETIK.StrWindow
             {
                 var Result = _ProductList;
 
-                if (FilterType > 0)
-                    Result = Result.Where(i => i.Manufacturer.ManufacturerID == FilterType);
-
                 switch (SortType)
                 {
+                    case 0:
+                        Result = KosmetikEntities.GetContext().Product.ToList();
+                        break;
                     case 1:
-                        _ProductList = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
+                        Result = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
                         break;
                     case 2:
-                        _ProductList = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
+                        Result = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
                         break;
                 }
                 if (SearchFilter != "")
@@ -66,6 +67,9 @@ namespace KOSMETIK.StrWindow
                         p.ProductStatus.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
                         p.ProductUnit.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
                         p.ProductSupplier.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (FilterType > 0)
+                    Result = Result.Where(i => i.ProductManufacturer == FilterType);
 
                 return Result.Take(1000);
             }
@@ -80,7 +84,7 @@ namespace KOSMETIK.StrWindow
         {
             InitializeComponent();
             DataContext = this;
-            ProductList = KosmetikEntities.GetContext().Product.ToList();
+            _ProductList = KosmetikEntities.GetContext().Product.ToList();
             FilterList = KosmetikEntities.GetContext().Manufacturer.ToList();
             FilterList.Insert(0, new Manufacturer { ManufacturerName = "Все производители" });
         }
@@ -88,7 +92,7 @@ namespace KOSMETIK.StrWindow
 
         private void ProductTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FilterType = (ProductTypeFilter.SelectedItem as Manufacturer).ManufacturerID;
+            FilterType = ProductTypeFilter.SelectedIndex;
             Invalidate();
         }
 
@@ -108,22 +112,12 @@ namespace KOSMETIK.StrWindow
         {
             AddProduct addproduct = new AddProduct(null);
             addproduct.ShowDialog();
-            if (addproduct.IsActive == false)
-            {
-                ProductListView.ItemsSource = KosmetikEntities.GetContext().Product.ToList();
-                Invalidate();
-            }
         }
 
         private void BtnEditS(object sender, RoutedEventArgs e)
         {
             AddProduct addproduct = new AddProduct((sender as Button).DataContext as Product);
             addproduct.ShowDialog();
-            if (addproduct.IsActive == false)
-            {
-                ProductListView.ItemsSource = KosmetikEntities.GetContext().Product.ToList();
-                Invalidate();
-            }
         }
 
         private void BtnDelete1(object sender, RoutedEventArgs e)
@@ -135,8 +129,8 @@ namespace KOSMETIK.StrWindow
                 {
                     KosmetikEntities.GetContext().Product.RemoveRange(productForRenoving);
                     KosmetikEntities.GetContext().SaveChanges();
-                    MessageBox.Show("Данные удалены!");
-                    ProductListView.ItemsSource = KosmetikEntities.GetContext().Product.ToList();
+                    MessageBox.Show("Данные удалены");
+                    Manager.AdminFrame.Navigate(new AdminProduct());
                 }
                 catch
                 {

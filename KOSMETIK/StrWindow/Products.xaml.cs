@@ -37,7 +37,7 @@ namespace KOSMETIK.StrWindow
             {
                 "Без сортировки",
                 "Стоимость по возростанию",
-                "Стоимость по убыванию"
+                "Стоимость по убыванию",
             };
         private string SearchFilter = "";
         private IEnumerable<Product> _ProductList;
@@ -47,18 +47,19 @@ namespace KOSMETIK.StrWindow
             {
                 var Result = _ProductList;
 
-                if (FilterType > 0)
-                    Result = Result.Where(i => i.Manufacturer.ManufacturerID == FilterType);
-
                 switch (SortType)
                 {
+                    case 0:
+                        Result = KosmetikEntities.GetContext().Product.ToList();
+                        break;
                     case 1:
-                        _ProductList = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
+                        Result = KosmetikEntities.GetContext().Product.OrderBy(p => p.ProductCost);
                         break;
                     case 2:
-                        _ProductList = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
+                        Result = KosmetikEntities.GetContext().Product.OrderByDescending(p => p.ProductCost);
                         break;
                 }
+
                 if (SearchFilter != "")
                     Result = Result.Where(
                         p => p.ProductName.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -66,6 +67,9 @@ namespace KOSMETIK.StrWindow
                         p.ProductStatus.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
                         p.ProductUnit.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
                         p.ProductSupplier.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (FilterType > 0)
+                    Result = Result.Where(i => i.ProductManufacturer == FilterType);
 
                 return Result.Take(1000);
             }
@@ -80,14 +84,14 @@ namespace KOSMETIK.StrWindow
         {
             InitializeComponent();
             DataContext = this;
-            ProductList = KosmetikEntities.GetContext().Product.ToList();
+            _ProductList = KosmetikEntities.GetContext().Product.ToList();
             FilterList = KosmetikEntities.GetContext().Manufacturer.ToList();
             FilterList.Insert(0, new Manufacturer { ManufacturerName = "Все производители" });
         }
 
         private void ProductTypeFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FilterType = (ProductTypeFilter.SelectedItem as Manufacturer).ManufacturerID;
+            FilterType = ProductTypeFilter.SelectedIndex;
             Invalidate();
         }
 

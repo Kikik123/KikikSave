@@ -1,4 +1,5 @@
-﻿using KOSMETIK.Model;
+﻿using KOSMETIK.Classes;
+using KOSMETIK.Model;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace KOSMETIK.StrWindow
         {
             OpenFileDialog GetImageDialog = new OpenFileDialog();
             GetImageDialog.Filter = "Файлы изображений: (*.png, *.jpg, *.jpeg)|*.png; *.jpg; *.jpeg";
+            GetImageDialog.InitialDirectory = Environment.GetEnvironmentVariable("/Resources");
             if (GetImageDialog.ShowDialog() == true)
             {
                 _currentproduct.ProductPhoto = GetImageDialog.FileName.Substring(Environment.CurrentDirectory.Length - 10);
@@ -82,6 +84,7 @@ namespace KOSMETIK.StrWindow
             {
                 KosmetikEntities.GetContext().SaveChanges();
                 MessageBox.Show("Информация сохранена");
+                Manager.AdminFrame.Navigate(new AdminProduct());
                 this.Close();
             }
             catch 
